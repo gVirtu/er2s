@@ -244,6 +244,17 @@ export class PokemonMiscellaneous extends DataBlock {
   }
 }
 
+class PokemonIVs {
+  constructor(ivEggAbility) {
+    this.hpIV = ivEggAbility & 31;
+    this.atkIV = (ivEggAbility >> 5) & 31;
+    this.defIV = (ivEggAbility >> 10) & 31;
+    this.speedIV = (ivEggAbility >> 15) & 31;
+    this.spAtkIV = (ivEggAbility >> 20) & 31;
+    this.spDefIV = (ivEggAbility >> 25) & 31;
+  }
+}
+
 export class Pokemon extends DataBlock {
   static SIZE = 100;
   static NICKNAME_LEN = 10;
@@ -319,6 +330,7 @@ export class Pokemon extends DataBlock {
     super(bytes, Pokemon.fields);
 
     this.decodeSubstructures();
+    this.decodeIVs();
   }
 
   decodeSubstructures() {
@@ -364,5 +376,9 @@ export class Pokemon extends DataBlock {
     }
 
     return decrypted;
+  }
+
+  decodeIVs() {
+    this.ivs = new PokemonIVs(this.misc.ivEggAbility);
   }
 }
