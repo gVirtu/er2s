@@ -1,4 +1,4 @@
-import { toBytes, toUint32, toUshort32 } from "./utils.js";
+import { toBytes, toByteString, toUint32, toUshort32 } from "./utils.js";
 
 class FieldArray {
   constructor(fields) {
@@ -31,6 +31,7 @@ class FieldType {
   static USHORT = "ushort";
   static UINT = "uint";
   static BYTE_ARRAY = "byteArray";
+  static STRING = "string";
 }
 
 class Field {
@@ -74,6 +75,10 @@ class Field {
 
       case FieldType.BYTE_ARRAY: {
         return [this.name, bytes.slice(0, this.size)];
+      }
+
+      case FieldType.STRING: {
+        return [this.name, toByteString(bytes.slice(0, this.size))];
       }
 
       default:
@@ -291,13 +296,13 @@ export class Pokemon extends DataBlock {
     // Offset = 4
     new Field("OTID", FieldType.UINT),
     // Offset = 8
-    new Field("nickname", FieldType.BYTE_ARRAY, { size: Pokemon.NICKNAME_LEN }),
+    new Field("nickname", FieldType.STRING, { size: Pokemon.NICKNAME_LEN }),
     // Offset = 18
     new Field("lang", FieldType.BYTE),
     // Offset = 19
     new Field("isEgg", FieldType.BYTE),
     // Offset = 20
-    new Field("originalTrainerName", FieldType.BYTE_ARRAY, {
+    new Field("originalTrainerName", FieldType.STRING, {
       size: Pokemon.OTNAME_LEN,
     }),
     // Offset = 27
