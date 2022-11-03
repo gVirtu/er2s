@@ -1,3 +1,5 @@
+import { toBytes, toUint32, toUshort32 } from "./utils.js";
+
 class FieldArray {
   constructor(fields) {
     this.fields = fields;
@@ -61,13 +63,12 @@ class Field {
         return [this.name, bytes[0]];
 
       case FieldType.USHORT: {
-        const value = (bytes[1] << 8) | bytes[0];
+        const value = toUshort32(bytes);
         return [this.name, value];
       }
 
       case FieldType.UINT: {
-        const value =
-          (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0];
+        const value = toUint32(bytes);
         return [this.name, value];
       }
 
@@ -116,12 +117,13 @@ export class Section extends DataBlock {
 }
 
 export class Team extends DataBlock {
+  static OFFSET = 0x0234;
   static SIZE = 604;
   static POKEMON_LEN = 600;
 
   static fields = [
     // Offset = 0
-    new Field("teamSize", FieldType.UINT, { offset: 0x0234}),
+    new Field("teamSize", FieldType.UINT),
     // Offset = 4
     new Field("pokemonList", FieldType.BYTE_ARRAY, { size: Team.POKEMON_LEN }),
   ];
@@ -131,15 +133,157 @@ export class Team extends DataBlock {
   }
 }
 
+export class PokemonGrowth extends DataBlock {
+  static SIZE = 12;
+
+  static fields = [
+    // Offset = 0
+    new Field("species", FieldType.USHORT),
+    // Offset = 2
+    new Field("item", FieldType.USHORT),
+    // Offset = 4
+    new Field("experience", FieldType.UINT),
+    // Offset = 8
+    new Field("ppBonuses", FieldType.BYTE),
+    // Offset = 9
+    new Field("friendship", FieldType.BYTE),
+    // Offset = 10
+    new Field("filler", FieldType.USHORT),
+  ];
+
+  constructor(bytes) {
+    super(bytes, PokemonGrowth.fields);
+  }
+}
+
+export class PokemonAttacks extends DataBlock {
+  static SIZE = 12;
+
+  static fields = [
+    // Offset = 0
+    new Field("move1", FieldType.USHORT),
+    // Offset = 2
+    new Field("move2", FieldType.USHORT),
+    // Offset = 4
+    new Field("move3", FieldType.USHORT),
+    // Offset = 6
+    new Field("move4", FieldType.USHORT),
+    // Offset = 8
+    new Field("pp1", FieldType.BYTE),
+    // Offset = 9
+    new Field("pp2", FieldType.BYTE),
+    // Offset = 10
+    new Field("pp3", FieldType.BYTE),
+    // Offset = 11
+    new Field("pp4", FieldType.BYTE),
+  ];
+
+  constructor(bytes) {
+    super(bytes, PokemonAttacks.fields);
+  }
+}
+
+export class PokemonEVsCondition extends DataBlock {
+  static SIZE = 12;
+
+  static fields = [
+    // Offset = 0
+    new Field("hpEV", FieldType.BYTE),
+    // Offset = 1
+    new Field("atkEV", FieldType.BYTE),
+    // Offset = 2
+    new Field("defEV", FieldType.BYTE),
+    // Offset = 3
+    new Field("speedEV", FieldType.BYTE),
+    // Offset = 4
+    new Field("spAtkEV", FieldType.BYTE),
+    // Offset = 5
+    new Field("spDefEV", FieldType.BYTE),
+    // Offset = 6
+    new Field("coolness", FieldType.BYTE),
+    // Offset = 7
+    new Field("beauty", FieldType.BYTE),
+    // Offset = 8
+    new Field("cuteness", FieldType.BYTE),
+    // Offset = 9
+    new Field("smartness", FieldType.BYTE),
+    // Offset = 10
+    new Field("toughness", FieldType.BYTE),
+    // Offset = 11
+    new Field("feel", FieldType.BYTE),
+  ];
+
+  constructor(bytes) {
+    super(bytes, PokemonEVsCondition.fields);
+  }
+}
+
+export class PokemonMiscellaneous extends DataBlock {
+  static SIZE = 12;
+
+  static fields = [
+    // Offset = 0
+    new Field("pokerus", FieldType.BYTE),
+    // Offset = 1
+    new Field("metLocation", FieldType.BYTE),
+    // Offset = 2
+    new Field("origins", FieldType.USHORT),
+    // Offset = 4
+    new Field("ivEggAbility", FieldType.UINT),
+    // Offset = 8
+    new Field("ribbonsObedience", FieldType.UINT),
+  ];
+
+  constructor(bytes) {
+    super(bytes, PokemonMiscellaneous.fields);
+  }
+}
+
 export class Pokemon extends DataBlock {
   static SIZE = 100;
   static NICKNAME_LEN = 10;
   static OTNAME_LEN = 7;
 
-  // TODO:
-  // Doc: https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_data_substructures_(Generation_III)
-  // Separar as substructures, determinar a ordem pelo PID,
-  // descriptografar cada uma e ler uma a uma no saveParser
+  static SUBSTRUCTURES = [
+    PokemonGrowth,
+    PokemonAttacks,
+    PokemonEVsCondition,
+    PokemonMiscellaneous,
+  ];
+
+  static SUBSTRUCTURE_FIELD_NAMES = [
+    "growth",
+    "attacks",
+    "evsCondition",
+    "misc",
+  ];
+
+  static SUBSTRUCTURE_ORDER = [
+    [0, 1, 2, 3], // GAEM
+    [0, 1, 3, 2], // GAME
+    [0, 2, 1, 3], // GEAM
+    [0, 2, 3, 1], // GEMA
+    [0, 3, 1, 2], // GMAE
+    [0, 3, 2, 1], // GMEA
+    [1, 0, 2, 3], // AGEM
+    [1, 0, 3, 2], // AGME
+    [1, 2, 0, 3], // AEGM
+    [1, 2, 3, 0], // AEMG
+    [1, 3, 0, 2], // AMGE
+    [1, 3, 2, 0], // AMEG
+    [2, 0, 1, 3], // EGAM
+    [2, 0, 3, 1], // EGMA
+    [2, 1, 0, 3], // EAGM
+    [2, 1, 3, 0], // EAMG
+    [2, 3, 0, 1], // EMGA
+    [2, 3, 1, 0], // EMAG
+    [3, 0, 1, 2], // MGAE
+    [3, 0, 2, 1], // MGEA
+    [3, 1, 0, 2], // MAGE
+    [3, 1, 2, 0], // MAEG
+    [3, 2, 0, 1], // MEGA
+    [3, 2, 1, 0], // MEAG
+  ];
 
   static fields = [
     // Offset = 0
@@ -163,79 +307,57 @@ export class Pokemon extends DataBlock {
     // Offset = 30
     new Field("unused", FieldType.BYTE_ARRAY, { size: 2 }),
     // Offset = 32
-    // Begin Substructure0
-    new Field("species", FieldType.USHORT),
-    // Offset = 34
-    new Field("item", FieldType.USHORT),
-    // Offset = 36
-    new Field("experience", FieldType.UINT),
-    // Offset = 40
-    new Field("ppBonuses", FieldType.BYTE),
-    // Offset = 41
-    new Field("friendship", FieldType.BYTE),
-    // Offset = 42
-    new Field("filler", FieldType.USHORT),
-    // End Substructure0
-    // Begin Substructure1
-    // Offset = 44
-    new Field("move1", FieldType.USHORT),
-    // Offset = 46
-    new Field("move2", FieldType.USHORT),
-    // Offset = 48
-    new Field("move3", FieldType.USHORT),
-    // Offset = 50
-    new Field("move4", FieldType.USHORT),
-    // Offset = 52
-    new Field("pp1", FieldType.BYTE),
-    // Offset = 53
-    new Field("pp2", FieldType.BYTE),
-    // Offset = 54
-    new Field("pp3", FieldType.BYTE),
-    // Offset = 55
-    new Field("pp4", FieldType.BYTE),
-    // End Substructure1
-    // Begin Substructure2
-    // Offset = 56
-    new Field("hpEV", FieldType.BYTE),
-    // Offset = 57
-    new Field("atkEV", FieldType.BYTE),
-    // Offset = 58
-    new Field("defEV", FieldType.BYTE),
-    // Offset = 59
-    new Field("speedEV", FieldType.BYTE),
-    // Offset = 60
-    new Field("spAtkEV", FieldType.BYTE),
-    // Offset = 61
-    new Field("spDefEV", FieldType.BYTE),
-    // Offset = 62
-    new Field("coolness", FieldType.BYTE),
-    // Offset = 63
-    new Field("beauty", FieldType.BYTE),
-    // Offset = 64
-    new Field("cuteness", FieldType.BYTE),
-    // Offset = 65
-    new Field("smartness", FieldType.BYTE),
-    // Offset = 66
-    new Field("toughness", FieldType.BYTE),
-    // Offset = 67
-    new Field("feel", FieldType.BYTE),
-    // End Substructure2
-    // Begin Substructure3
-    // Offset = 68
-    new Field("pokerus", FieldType.BYTE),
-    // Offset = 69
-    new Field("metLocation", FieldType.BYTE),
-    // Offset = 70
-    new Field("origins", FieldType.USHORT),
-    // Offset = 72
-    new Field("ivEggAbility", FieldType.UINT),
-    // Offset = 76
-    new Field("ribbonsObedience", FieldType.UINT),
-    // End Substructure3
-    // Offset = 80
+    new Field("data", FieldType.BYTE_ARRAY, { size: 48 }),
   ];
 
   constructor(bytes) {
     super(bytes, Pokemon.fields);
+
+    this.decodeSubstructures();
+  }
+
+  decodeSubstructures() {
+    const substructureOrder = Pokemon.SUBSTRUCTURE_ORDER[this.PID % 24];
+    const substructureDecryptKey = (this.PID ^ this.OTID) >>> 0;
+
+    let offset = 0;
+
+    for (let index = 0; index < Pokemon.SUBSTRUCTURES.length; index++) {
+      const substructureIndex = substructureOrder[index];
+
+      const substructure = Pokemon.SUBSTRUCTURES[substructureIndex];
+      const substructureFieldName =
+        Pokemon.SUBSTRUCTURE_FIELD_NAMES[substructureIndex];
+
+      const substructureBytes = this.data.slice(
+        offset,
+        offset + substructure.SIZE
+      );
+
+      const decryptedBytes = this.decryptBytes(
+        substructureBytes,
+        substructureDecryptKey
+      );
+
+      this[substructureFieldName] = new substructure(decryptedBytes);
+
+      offset += substructure.SIZE;
+    }
+  }
+
+  decryptBytes(bytes, key) {
+    const decrypted = [...bytes];
+
+    for (let index = 0; index < bytes.length; index += 4) {
+      const dataSlice = bytes.slice(index, index + 4);
+      const data = toUint32(dataSlice);
+      const res = toBytes((data ^ key) >>> 0);
+      decrypted[index] = res[0];
+      decrypted[index + 1] = res[1];
+      decrypted[index + 2] = res[2];
+      decrypted[index + 3] = res[3];
+    }
+
+    return decrypted;
   }
 }

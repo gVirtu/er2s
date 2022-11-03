@@ -28,7 +28,7 @@ class SaveSlot {
   readTeamPokemon() {
     const section = this.sections[SaveSlot.TEAM_SECTION_ID];
 
-    const teamBytes = section.data.slice(0, Team.SIZE);
+    const teamBytes = section.data.slice(Team.OFFSET, Team.OFFSET + Team.SIZE);
     const teamData = new Team(teamBytes);
 
     for (let index = 0; index < teamData.teamSize; index++) {
