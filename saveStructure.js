@@ -1,3 +1,4 @@
+import { MOVE_NAMES } from "./data/moves.js";
 import { toBytes, toByteString, toUint32, toUshort32 } from "./utils.js";
 
 class FieldArray {
@@ -185,6 +186,15 @@ export class PokemonAttacks extends DataBlock {
 
   constructor(bytes) {
     super(bytes, PokemonAttacks.fields);
+
+    this.putMoveNames();
+  }
+
+  putMoveNames() {
+    this.move1Name = MOVE_NAMES[this.move1];
+    this.move2Name = MOVE_NAMES[this.move2];
+    this.move3Name = MOVE_NAMES[this.move3];
+    this.move4Name = MOVE_NAMES[this.move4];
   }
 }
 

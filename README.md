@@ -8,4 +8,4 @@
  - [ ] Map Ability names
  - [ ] Map Nature names
  - [x] IV extraction
- - [ ] Map Move names
+ - [x] Map Move names
