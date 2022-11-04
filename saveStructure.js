@@ -1,3 +1,4 @@
+import { ITEM_NAMES } from "./data/items.js";
 import { MOVE_NAMES } from "./data/moves.js";
 import { toBytes, toByteString, toUint32, toUshort32 } from "./utils.js";
 
@@ -159,6 +160,12 @@ export class PokemonGrowth extends DataBlock {
 
   constructor(bytes) {
     super(bytes, PokemonGrowth.fields);
+
+    this.putItemName();
+  }
+
+  putItemName() {
+    this.itemName = ITEM_NAMES[this.item];
   }
 }
 

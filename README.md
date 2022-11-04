@@ -4,7 +4,7 @@
  - [x] Map nickname
  - [ ] Map Pokemon names
  - [ ] Map Gender letters
- - [ ] Map Item names
+ - [x] Map Item names
  - [ ] Map Ability names
  - [ ] Map Nature names
  - [x] IV extraction
