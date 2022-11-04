@@ -1,3 +1,5 @@
+import { POKEMON_BASE_STATS } from "./data/pokemonStats.js";
+
 export function toUint32(bytes) {
   return (
     ((bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0]) >>> 0
@@ -62,4 +64,32 @@ export function toByteString(bytes) {
   });
 
   return res;
+}
+
+const NUM_NORMAL_ABILITY_SLOTS = 2
+const NUM_HIDDEN_ABILITY_SLOTS = 1
+const NUM_ABILITY_SLOTS = (NUM_NORMAL_ABILITY_SLOTS + NUM_HIDDEN_ABILITY_SLOTS)
+
+export function getAbilityBySpecies(species, abilityNum) {
+  let lastUsedAbility;
+
+  if (abilityNum < NUM_ABILITY_SLOTS) {
+    lastUsedAbility = POKEMON_BASE_STATS[species].abilities[abilityNum];
+  } else {
+    lastUsedAbility = "ABILITY_NONE"
+  };
+
+  // if abilityNum is empty hidden ability, look for other hidden abilities
+  if (abilityNum >= NUM_NORMAL_ABILITY_SLOTS) {
+    for (let i = NUM_NORMAL_ABILITY_SLOTS; i < NUM_ABILITY_SLOTS && lastUsedAbility == "ABILITY_NONE"; i++) {
+      lastUsedAbility = POKEMON_BASE_STATS[species].abilities[i];
+    }
+  }
+
+  // look for any non-empty ability
+  for (let i = 0; i < NUM_ABILITY_SLOTS && lastUsedAbility == "ABILITY_NONE"; i++) {
+      lastUsedAbility = POKEMON_BASE_STATS[species].abilities[i];
+  }
+
+  return lastUsedAbility;
 }

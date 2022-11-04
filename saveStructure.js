@@ -1,7 +1,9 @@
+import { ABILITY_MAP } from "./data/abilities.js";
 import { ITEM_NAMES } from "./data/items.js";
 import { MOVE_NAMES } from "./data/moves.js";
-import { POKEMON_NAMES } from "./data/pokemon.js";
-import { toBytes, toByteString, toUint32, toUshort32 } from "./utils.js";
+import { POKEMON_NAMES } from "./data/pokemonNames.js";
+import { POKEMON_BASE_STATS } from "./data/pokemonStats.js";
+import { getAbilityBySpecies, toBytes, toByteString, toUint32, toUshort32 } from "./utils.js";
 
 class FieldArray {
   constructor(fields) {
@@ -354,6 +356,7 @@ export class Pokemon extends DataBlock {
 
     this.decodeSubstructures();
     this.decodeIVs();
+    this.decodeAbility();
   }
 
   decodeSubstructures() {
@@ -403,5 +406,12 @@ export class Pokemon extends DataBlock {
 
   decodeIVs() {
     this.ivs = new PokemonIVs(this.misc.ivEggAbility);
+  }
+
+  decodeAbility() {
+    const abilityNum = (this.misc.ribbonsObedience >> 29) & 3;
+    const abilityCode = getAbilityBySpecies(this.growth.species, abilityNum);
+
+    this.abilityName = ABILITY_MAP[abilityCode];
   }
 }
