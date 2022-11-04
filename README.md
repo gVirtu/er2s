@@ -2,7 +2,7 @@
 
 # TODOs
  - [x] Map nickname
- - [ ] Map Pokemon names
+ - [x] Map Pokemon names
  - [ ] Map Gender letters
  - [x] Map Item names
  - [ ] Map Ability names

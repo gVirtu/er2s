@@ -1,5 +1,6 @@
 import { ITEM_NAMES } from "./data/items.js";
 import { MOVE_NAMES } from "./data/moves.js";
+import { POKEMON_NAMES } from "./data/pokemon.js";
 import { toBytes, toByteString, toUint32, toUshort32 } from "./utils.js";
 
 class FieldArray {
@@ -162,10 +163,15 @@ export class PokemonGrowth extends DataBlock {
     super(bytes, PokemonGrowth.fields);
 
     this.putItemName();
+    this.putSpeciesName();
   }
 
   putItemName() {
     this.itemName = ITEM_NAMES[this.item];
+  }
+
+  putSpeciesName() {
+    this.speciesName = POKEMON_NAMES[this.species];
   }
 }
 
