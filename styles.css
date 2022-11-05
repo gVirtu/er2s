@@ -1,0 +1,139 @@
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Main background */
+body {
+  background: rgb(17, 38, 144);
+  background: linear-gradient(180deg, rgba(17, 38, 144, 1) 0%, rgba(48, 66, 250, 1) 100%);
+}
+
+/* Container */
+section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+@media only screen and (min-width: 1024px) {
+  section {
+    width: max(50%, 900px);
+  }
+}
+
+/* Header */
+h1 {
+  font-size: 2rem;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+@media only screen and (min-width: 768px) {
+  h1 {
+    font-size: 3rem;
+    margin-top: 70px;
+    margin-bottom: 30px;
+  }
+}
+
+/* Output and error */
+#output {
+  display: none;
+  padding: 0 5% 70px;
+  flex-direction: column;
+  flex: 1;
+}
+
+#error-detail {
+  display: none;
+  padding: 0 5% 70px;
+  flex-direction: column;
+  flex: 1;
+}
+
+#error-detail p {
+  margin-bottom: 30px;
+}
+
+#error-content {
+  font-family: monospace;
+}
+
+#output.show, #error-detail.show {
+  display: flex;
+}
+
+#copy-button {
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+#formatted-team {
+  flex: 1;
+}
+
+/* File dropzone */
+#drop-zone {
+  display: flex;
+  border: 2px dashed #ccc;
+  border-radius: 20px;
+  width: min(480px, 90%);
+  margin: 20px auto 25px;
+  padding: 50px;
+}
+
+@media only screen and (min-width: 768px) {
+  #drop-zone {
+    margin: 50px auto 60px;
+  }
+}
+
+#drop-zone.highlight {
+  border-color: rgb(17, 38, 144);
+}
+
+#drop-zone label {
+  display: inline-block;
+  flex: 1;
+  padding: 10px;
+  font-size: 1rem;
+  background: #ccc;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#drop-zone label:hover {
+  background: #ddd;
+}
+
+/* Hide default input */
+#save-file-input {
+  display: none;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+footer img {
+  height: 30px;
+  margin-right: 16px;
+  opacity: 0.5;
+}
+
+@media only screen and (min-width: 768px) {
+  footer img {
+    height: 40px;
+    margin-right: 20px;
+  }
+}
