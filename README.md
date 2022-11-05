@@ -11,5 +11,5 @@
  - [x] Map Move names
  - [x] Map shininess
  - [x] Format to Showdown
- - [ ] Copy button
+ - [x] Copy button
  - [ ] Style
