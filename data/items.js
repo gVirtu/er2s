@@ -1,5 +1,7 @@
+export const NO_ITEM = "NONE";
+
 export const ITEM_NAMES = [
-  "NONE",
+  NO_ITEM,
   "Poké Ball",
   "Great Ball",
   "Ultra Ball",

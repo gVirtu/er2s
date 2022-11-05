@@ -1,5 +1,7 @@
+export const NO_MOVE = "NONE";
+
 export const MOVE_NAMES = [
-  "-",
+  "NONE",
   "Pound",
   "Karate Chop",
   "Double Slap",

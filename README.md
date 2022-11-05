@@ -10,6 +10,6 @@
  - [x] IV extraction
  - [x] Map Move names
  - [x] Map shininess
- - [ ] Format to Showdown
+ - [x] Format to Showdown
  - [ ] Copy button
  - [ ] Style

@@ -358,6 +358,10 @@ export class Pokemon extends DataBlock {
     new Field("unused", FieldType.BYTE_ARRAY, { size: 2 }),
     // Offset = 32
     new Field("data", FieldType.BYTE_ARRAY, { size: 48 }),
+    // Offset = 80
+    new Field("statusCondition", FieldType.UINT),
+    // Offset = 84
+    new Field("level", FieldType.BYTE),
   ];
 
   constructor(bytes) {

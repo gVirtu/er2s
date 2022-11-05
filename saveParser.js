@@ -56,8 +56,6 @@ export class SaveParser {
     const saveA = new SaveSlot(bytes, SaveParser.SAVE_A_OFFSET);
     const saveB = new SaveSlot(bytes, SaveParser.SAVE_B_OFFSET);
 
-    const save = (saveA.saveIndex > saveB.saveIndex) ? (saveA) : (saveB);
-
-    console.log(save);
+    return (saveA.saveIndex > saveB.saveIndex) ? (saveA) : (saveB);
   }
 }
