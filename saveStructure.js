@@ -7,6 +7,7 @@ import {
   getAbilityBySpecies,
   getGenderBySpeciesAndPid,
   getNatureByPid,
+  getShininessByPid,
   toBytes,
   toByteString,
   toUint32,
@@ -367,6 +368,7 @@ export class Pokemon extends DataBlock {
     this.decodeNature();
     this.decodeIVs();
     this.decodeAbility();
+    this.decodeShininess();
   }
 
   decodeSubstructures() {
@@ -431,5 +433,9 @@ export class Pokemon extends DataBlock {
     const abilityCode = getAbilityBySpecies(this.growth.species, abilityNum);
 
     this.abilityName = ABILITY_MAP[abilityCode];
+  }
+
+  decodeShininess() {
+    this.shiny = getShininessByPid(this.PID, this.OTID);
   }
 }

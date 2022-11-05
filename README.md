@@ -9,4 +9,7 @@
  - [x] Map Nature names
  - [x] IV extraction
  - [x] Map Move names
- - [ ] Map shininess
+ - [x] Map shininess
+ - [ ] Format to Showdown
+ - [ ] Copy button
+ - [ ] Style

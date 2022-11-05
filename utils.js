@@ -88,6 +88,14 @@ export const getNatureByPid = (pid) => {
   return NATURE_NAMES[pid % NATURE_NAMES.length];
 };
 
+export const getShininessByPid = (pid, otid) => {
+  const trainer = (otid & 0xFFFF);
+  const secret = (otid >>> 16);
+  const p1 = (pid & 0xFFFF);
+  const p2 = (pid >>> 16);
+  return (trainer ^ secret ^ p1 ^ p2) < 8;
+}
+
 const NUM_NORMAL_ABILITY_SLOTS = 2;
 const NUM_HIDDEN_ABILITY_SLOTS = 1;
 const NUM_ABILITY_SLOTS = NUM_NORMAL_ABILITY_SLOTS + NUM_HIDDEN_ABILITY_SLOTS;
