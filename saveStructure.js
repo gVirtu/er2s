@@ -409,7 +409,7 @@ export class Pokemon extends DataBlock {
   }
 
   decodeAbility() {
-    const abilityNum = (this.misc.ribbonsObedience >> 29) & 3;
+    const abilityNum = (this.misc.ribbonsObedience >> 28) & 3;
     const abilityCode = getAbilityBySpecies(this.growth.species, abilityNum);
 
     this.abilityName = ABILITY_MAP[abilityCode];

@@ -1,5 +1,3 @@
-import { POKEMON_NAMES } from "./data/pokemonNames.js";
-import { POKEMON_BASE_STATS } from "./data/pokemonStats.js";
 import { SaveParser } from "./saveParser.js";
 
 function readSave(file) {
@@ -24,14 +22,3 @@ fileSelector.addEventListener('change', (event) => {
     readSave(fileList[0]);
   }
 });
-
-console.log('BEGIN INTEGRITY CHECK...');
-POKEMON_BASE_STATS.every((stats, index) => {
-  if (!Number.isInteger(stats.genderRatio)) {
-    console.log(`Unexpected genderRatio ${stats.genderRatio} at index #${index}`);
-  }
-  if (!Array.isArray(stats.abilities)) {
-    console.log(`Unexpected abilities ${stats.abilities} at index #${index}`);
-  }
-})
-console.log('FINISHED INTEGRITY CHECK.');
