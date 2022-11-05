@@ -1,6 +1,6 @@
-const MON_MALE = 0x00;
-const MON_FEMALE = 0xfe;
-const MON_GENDERLESS = 0xff;
+export const MON_MALE = 0x00;
+export const MON_FEMALE = 0xfe;
+export const MON_GENDERLESS = 0xff;
 
 const FLIP = 0;
 const NO_FLIP = 1;

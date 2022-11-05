@@ -1,4 +1,9 @@
-import { POKEMON_BASE_STATS } from "./data/pokemonStats.js";
+import {
+  MON_FEMALE,
+  MON_GENDERLESS,
+  MON_MALE,
+  POKEMON_BASE_STATS,
+} from "./data/pokemonStats.js";
 
 export function toUint32(bytes) {
   return (
@@ -42,7 +47,9 @@ const CHAR_TABLE = [
     "VWXYZabcdefghijk", // D
     "lmnopqrstuvwxyz▶", // E
     ":ÄÖÜäöü   ", // F
-  ].map((s) => s.split("")).flat(),
+  ]
+    .map((s) => s.split(""))
+    .flat(),
   // Make the total length 256 so that any byte access is always within the array
   TERMINATOR,
   TERMINATOR,
@@ -66,9 +73,19 @@ export function toByteString(bytes) {
   return res;
 }
 
-const NUM_NORMAL_ABILITY_SLOTS = 2
-const NUM_HIDDEN_ABILITY_SLOTS = 1
-const NUM_ABILITY_SLOTS = (NUM_NORMAL_ABILITY_SLOTS + NUM_HIDDEN_ABILITY_SLOTS)
+export const getGenderBySpecies = (species, pid) => {
+  const threshold = POKEMON_BASE_STATS[species].genderRatio;
+
+  if (threshold == MON_GENDERLESS) return "";
+  if (threshold == MON_FEMALE) return "F";
+  if (threshold == MON_MALE) return "M";
+
+  return (pid & 0xff) >= threshold ? "M" : "F";
+};
+
+const NUM_NORMAL_ABILITY_SLOTS = 2;
+const NUM_HIDDEN_ABILITY_SLOTS = 1;
+const NUM_ABILITY_SLOTS = NUM_NORMAL_ABILITY_SLOTS + NUM_HIDDEN_ABILITY_SLOTS;
 
 export function getAbilityBySpecies(species, abilityNum) {
   let lastUsedAbility;
@@ -76,19 +93,27 @@ export function getAbilityBySpecies(species, abilityNum) {
   if (abilityNum < NUM_ABILITY_SLOTS) {
     lastUsedAbility = POKEMON_BASE_STATS[species].abilities[abilityNum];
   } else {
-    lastUsedAbility = "ABILITY_NONE"
-  };
+    lastUsedAbility = "ABILITY_NONE";
+  }
 
   // if abilityNum is empty hidden ability, look for other hidden abilities
   if (abilityNum >= NUM_NORMAL_ABILITY_SLOTS) {
-    for (let i = NUM_NORMAL_ABILITY_SLOTS; i < NUM_ABILITY_SLOTS && lastUsedAbility == "ABILITY_NONE"; i++) {
+    for (
+      let i = NUM_NORMAL_ABILITY_SLOTS;
+      i < NUM_ABILITY_SLOTS && lastUsedAbility == "ABILITY_NONE";
+      i++
+    ) {
       lastUsedAbility = POKEMON_BASE_STATS[species].abilities[i];
     }
   }
 
   // look for any non-empty ability
-  for (let i = 0; i < NUM_ABILITY_SLOTS && lastUsedAbility == "ABILITY_NONE"; i++) {
-      lastUsedAbility = POKEMON_BASE_STATS[species].abilities[i];
+  for (
+    let i = 0;
+    i < NUM_ABILITY_SLOTS && lastUsedAbility == "ABILITY_NONE";
+    i++
+  ) {
+    lastUsedAbility = POKEMON_BASE_STATS[species].abilities[i];
   }
 
   return lastUsedAbility;

@@ -3,7 +3,7 @@ import { ITEM_NAMES } from "./data/items.js";
 import { MOVE_NAMES } from "./data/moves.js";
 import { POKEMON_NAMES } from "./data/pokemonNames.js";
 import { POKEMON_BASE_STATS } from "./data/pokemonStats.js";
-import { getAbilityBySpecies, toBytes, toByteString, toUint32, toUshort32 } from "./utils.js";
+import { getAbilityBySpecies, getGenderBySpecies, toBytes, toByteString, toUint32, toUshort32 } from "./utils.js";
 
 class FieldArray {
   constructor(fields) {
@@ -355,6 +355,7 @@ export class Pokemon extends DataBlock {
     super(bytes, Pokemon.fields);
 
     this.decodeSubstructures();
+    this.decodeGender();
     this.decodeIVs();
     this.decodeAbility();
   }
@@ -402,6 +403,10 @@ export class Pokemon extends DataBlock {
     }
 
     return decrypted;
+  }
+
+  decodeGender() {
+    this.gender = getGenderBySpecies(this.growth.species, this.PID);
   }
 
   decodeIVs() {
