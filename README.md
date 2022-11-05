@@ -6,6 +6,7 @@
  - [x] Map Gender letters
  - [x] Map Item names
  - [x] Map Ability names
- - [ ] Map Nature names
+ - [x] Map Nature names
  - [x] IV extraction
  - [x] Map Move names
+ - [ ] Map shininess

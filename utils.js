@@ -1,3 +1,4 @@
+import { NATURE_NAMES } from "./data/natures.js";
 import {
   MON_FEMALE,
   MON_GENDERLESS,
@@ -73,7 +74,7 @@ export function toByteString(bytes) {
   return res;
 }
 
-export const getGenderBySpecies = (species, pid) => {
+export const getGenderBySpeciesAndPid = (species, pid) => {
   const threshold = POKEMON_BASE_STATS[species].genderRatio;
 
   if (threshold == MON_GENDERLESS) return "";
@@ -81,6 +82,10 @@ export const getGenderBySpecies = (species, pid) => {
   if (threshold == MON_MALE) return "M";
 
   return (pid & 0xff) >= threshold ? "M" : "F";
+};
+
+export const getNatureByPid = (pid) => {
+  return NATURE_NAMES[pid % NATURE_NAMES.length];
 };
 
 const NUM_NORMAL_ABILITY_SLOTS = 2;
