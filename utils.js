@@ -93,7 +93,7 @@ export const getShininessByPid = (pid, otid) => {
   const secret = (otid >>> 16);
   const p1 = (pid & 0xFFFF);
   const p2 = (pid >>> 16);
-  return (trainer ^ secret ^ p1 ^ p2) < 8;
+  return (trainer ^ secret ^ p1 ^ p2) < 655;
 }
 
 const NUM_NORMAL_ABILITY_SLOTS = 2;
